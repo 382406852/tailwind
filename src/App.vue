@@ -4,9 +4,9 @@
 </script>
 
 <template>
-  <h1 class="text-3xl  font-bold underline">
-    Hello world!
-  </h1>
+  <div class=" bg-orange-600 text-5xl text-white">
+    hello world
+  </div>
 </template>
 
 <style scoped>
