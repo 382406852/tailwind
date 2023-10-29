@@ -8,7 +8,15 @@ export default {
   theme: {
     theme: {
     },
-    extend: {},
+    extend: {
+      colors:{
+        "gray":'#545c64'
+      },
+      backgroundColor:{
+        "gray":'#545c64'
+        
+      }
+    },
   },
   plugins: [
     plugin(function({ matchUtilities, theme }) {
