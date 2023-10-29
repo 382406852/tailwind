@@ -1,12 +1,15 @@
 <script setup lang="ts">
 
-
 </script>
 
 <template>
-   <router-view></router-view> 
+  <div>
+    pageA
+  </div>
 </template>
 
 <style scoped>
-
+.read-the-docs {
+  color: #888;
+}
 </style>
