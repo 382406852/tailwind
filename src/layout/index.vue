@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Document, Menu as IconMenu, Location, Setting } from '@element-plus/icons-vue'
 const handleOpen = (key: string, keyPath: string[]) => {
     console.log(key, keyPath)
 }
@@ -12,6 +11,7 @@ const handleClose = (key: string, keyPath: string[]) => {
     <el-row>
         <el-col class="bg-gray h-screen" span="4">
             <div class="test"></div>
+
             <el-menu
                 active-text-color="#ffd04b"
                 background-color="#545c64"
