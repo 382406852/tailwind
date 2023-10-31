@@ -8,4 +8,6 @@ import App from './App.vue';
 const app = createApp(App);
 app.use(ElementPlus);
 app.use(router);
-app.mount('#app');
+setTimeout(() => {
+    app.mount('#app');
+}, 1000);

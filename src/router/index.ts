@@ -5,18 +5,17 @@ let routes = [
         name: 'layout',
         path: '/',
         component: () => import('@/layout/index.vue'),
-        children: [{ path: '/', redirect: '/pageA' }]
+        children: []
     }
 ];
 function loadDynamic(router: Router, files: object) {
     Object.keys(files).forEach(async (key: any) => {
-        // debugger;
         //console.log(key, 'key');
-        // let menu = await files[key]();
-        // console.log(menu);
+        let menu = await files[key]();
+        console.log(menu.default.menuLabel, 'menu.default.menuLabel');
         let currentModule = key.replace(/\/src\/views\/|\/index\.vue/g, '');
         router.addRoute('layout', {
-            meta: { label: 'menu.default.menuLabel' },
+            meta: { label: menu.default.menuLabel },
             path: `${currentModule}`,
             component: () => import(`@/views/${currentModule}/index.vue`)
         });

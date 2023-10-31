@@ -1,13 +1,16 @@
 <script setup lang="ts">
 import { RouteRecordNormalized } from 'vue-router';
-import { reactive } from 'vue';
+import { reactive, onMounted } from 'vue';
 import router from '@/router/index.ts';
 type route = { path: string; label: string };
-let currentRoutes: RouteRecordNormalized[] = router
-    .getRoutes()
-    .filter((route: RouteRecordNormalized) => route.path !== '/');
+//let currentRoutes: RouteRecordNormalized[] = reactive([]);
+let currentRoutes: RouteRecordNormalized[] = reactive(router.getRoutes());
 
-console.log(currentRoutes, 'currentRoutes');
+onMounted(() => {
+    currentRoutes.length = 0;
+    currentRoutes = router.getRoutes().filter((route: RouteRecordNormalized) => route.path !== '/');
+    console.log(currentRoutes, 'onMounted');
+});
 let routes: route[] = reactive([
     {
         path: '/a',
@@ -44,11 +47,8 @@ function closeRoute(route: route) {
                 class="el-menu-vertical-demo"
                 default-active="2"
                 text-color="#fff"
-                @open="handleOpen"
-                @close="handleClose"
             >
                 <el-menu-item index="2" v-for="route in currentRoutes" :key="route.path">
-                    <el-icon><icon-menu /></el-icon>
                     <span>{{ route.meta.label }}</span>
                 </el-menu-item>
             </el-menu>
