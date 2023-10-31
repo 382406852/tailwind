@@ -3,7 +3,6 @@ import { RouteRecordNormalized } from 'vue-router';
 import { reactive, onMounted } from 'vue';
 import router from '@/router/index.ts';
 type route = { path: string; label: string };
-//let currentRoutes: RouteRecordNormalized[] = reactive([]);
 let currentRoutes: RouteRecordNormalized[] = reactive(router.getRoutes());
 
 onMounted(() => {
@@ -45,10 +44,11 @@ function closeRoute(route: route) {
                 active-text-color="#ffd04b"
                 background-color="#545c64"
                 class="el-menu-vertical-demo"
-                default-active="2"
+                :default-active="currentRoutes[0].path"
                 text-color="#fff"
+                router
             >
-                <el-menu-item index="2" v-for="route in currentRoutes" :key="route.path">
+                <el-menu-item :index="route.path" v-for="route in currentRoutes" :key="route.path">
                     <span>{{ route.meta.label }}</span>
                 </el-menu-item>
             </el-menu>
