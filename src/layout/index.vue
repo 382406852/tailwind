@@ -1,39 +1,29 @@
 <script setup lang="ts">
-import { RouteRecordNormalized } from 'vue-router';
-import { reactive, onMounted } from 'vue';
+import { type RouteLocationNormalized, RouteRecordNormalized, useRouter } from 'vue-router';
+import { reactive, onMounted, computed } from 'vue';
+import { useRouteStore } from '@/store/index.ts';
 import router from '@/router/index.ts';
-type route = { path: string; label: string };
-let currentRoutes: RouteRecordNormalized[] = reactive(router.getRoutes());
+const RouteStore = useRouteStore();
+let currentRoutes: RouteRecordNormalized[] = reactive([]);
+const routerRouter = useRouter();
+const currentPath = computed(() => {
+    console.log('route changed', routerRouter.currentRoute.value.path);
+    return routerRouter.currentRoute.value.path;
+});
 
 onMounted(() => {
     currentRoutes.length = 0;
-    currentRoutes = router.getRoutes().filter((route: RouteRecordNormalized) => route.path !== '/');
+    currentRoutes.push(
+        ...router.getRoutes().filter((route: RouteRecordNormalized) => route.path !== '/')
+    );
     console.log(currentRoutes, 'onMounted');
 });
-let routes: route[] = reactive([
-    {
-        path: '/a',
-        label: '测试路由1'
-    },
-    {
-        path: '/b',
-        label: '测试路由2'
-    },
-    {
-        path: '/c',
-        label: '测试路由3'
-    },
-    {
-        path: '/d',
-        label: '测试路由4'
-    }
-]);
-function changeRoute() {
+function changeRoute(route: RouteLocationNormalized) {
     console.log('chengeRoute');
+    routerRouter.push(route.fullPath);
 }
-function closeRoute(route: route) {
-    let index = routes.indexOf(route);
-    routes.splice(index, 1);
+function closeRoute(route: RouteLocationNormalized) {
+    RouteStore.deleteRoute(route);
 }
 </script>
 
@@ -44,31 +34,32 @@ function closeRoute(route: route) {
                 active-text-color="#ffd04b"
                 background-color="#545c64"
                 class="el-menu-vertical-demo"
-                :default-active="currentRoutes[0].path"
                 text-color="#fff"
+                :default-active="currentPath"
                 router
             >
                 <el-menu-item :index="route.path" v-for="route in currentRoutes" :key="route.path">
-                    <span>{{ route.meta.label }}</span>
+                    <span>{{ route.meta.label }}{{ route.path }}</span>
                 </el-menu-item>
             </el-menu>
         </el-col>
         <el-col :span="21">
             <el-card>
                 <template #header>
-                    <div class="w-full text-2xl">周师的后台管理系统</div>
+                    <div class="w-full text-2xl">周师的后台管理系统{{ currentRoutes.length }}</div>
                 </template>
                 <el-row>
                     <el-col :span="24">
                         <el-tag
-                            v-for="tag in routes"
-                            :key="tag.path"
-                            @click="changeRoute"
-                            @close="closeRoute(tag)"
-                            class="mx-1"
+                            v-for="route in RouteStore.dynamicRoutes"
+                            :key="route.path"
+                            @click="changeRoute(route)"
+                            @close="closeRoute(route)"
+                            class="mx-1 cursor-pointer"
+                            :effect="currentPath == route.fullPath ? 'dark' : 'light'"
                             closable
                         >
-                            {{ tag.label }}
+                            {{ route.meta.label }}{{ route.fullPath }}
                         </el-tag>
                     </el-col>
                 </el-row>

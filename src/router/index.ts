@@ -1,5 +1,7 @@
-import { createRouter, Router, createWebHashHistory } from 'vue-router';
-let files = import.meta.glob('@/views/**/*.vue');
+import { createRouter, Router, createWebHashHistory, RouteLocationNormalized } from 'vue-router';
+
+let files = import.meta.glob('@/views/**/*.vue', { eager: true });
+
 let routes = [
     {
         name: 'layout',
@@ -31,9 +33,9 @@ function directoryReading(router: Router, files: object) {
     return new Promise((resolve) => {
         let firstRoute: string = '';
         let keys = Object.keys(files);
-        keys.forEach(async (key: any, index: number) => {
-            console.log(files[key], typeof key, 'files[JSON.stringify(key)]');
-            let menu = await files[key]();
+        keys.forEach((key: any, index: number) => {
+            // debugger;
+            let menu = files[key];
             let currentModule = key.replace(/\/src\/views\/|\/index\.vue/g, '');
             if (!index) firstRoute = currentModule;
             router.addRoute('layout', {
@@ -53,6 +55,14 @@ const router = createRouter({
     history: createWebHashHistory(),
     routes // `routes: routes` 的缩写
 });
+
+function generateRoute(to) {
+    return {
+        path: to.fullPath,
+        label: to.meta.label
+    };
+}
+
 loadDynamic(router, files);
 
 export default router;
